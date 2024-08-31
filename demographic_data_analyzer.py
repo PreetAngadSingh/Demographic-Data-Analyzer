@@ -3,42 +3,42 @@ import pandas as pd
 
 def calculate_demographic_data(print_data=True):
     # Read data from file
-    df = None
+    df = pd.read_csv('adult.data.csv')
 
     # How many of each race are represented in this dataset? This should be a Pandas series with race names as the index labels.
-    race_count = None
+    race_count = df['race'].value_counts()
 
     # What is the average age of men?
-    average_age_men = None
+    average_age_men = round(df[df['sex']=='Male']['age'].mean(),1)
 
     # What is the percentage of people who have a Bachelor's degree?
-    percentage_bachelors = None
+    percentage_bachelors = round((df[df['education']=='Bachelors'].shape[0] / df['education'].shape[0]) * 100,1)
 
     # What percentage of people with advanced education (`Bachelors`, `Masters`, or `Doctorate`) make more than 50K?
     # What percentage of people without advanced education make more than 50K?
-
-    # with and without `Bachelors`, `Masters`, or `Doctorate`
-    higher_education = None
-    lower_education = None
-
-    # percentage with salary >50K
-    higher_education_rich = None
-    lower_education_rich = None
+    education = df['education'].isin(['Bachelors', 'Masters', 'Doctorate'])
+    earnings = df['salary']=='>50K'
+    # with and without `Bachelors`, `Masters`, or `Doctorate` and percentage with salary >50K
+    higher_education_rich = round(((education & earnings).sum()/education.sum())*100,1)
+    lower_education_rich = round(((~education & earnings).sum()/(~education).sum())*100,1)
 
     # What is the minimum number of hours a person works per week (hours-per-week feature)?
-    min_work_hours = None
+    min_work_hours = min_work_hours = df['hours-per-week'].min()
 
     # What percentage of the people who work the minimum number of hours per week have a salary of >50K?
-    num_min_workers = None
-
-    rich_percentage = None
+    num_min_workers = df['hours-per-week']==min_work_hours
+    rich_percentage = round(((num_min_workers & earnings).sum()/num_min_workers.sum())*100,1)
 
     # What country has the highest percentage of people that earn >50K?
-    highest_earning_country = None
-    highest_earning_country_percentage = None
+    most_count_country = df[earnings]['native-country'].value_counts()
+    percentage = ((most_count_country/df['native-country'].value_counts())*100).sort_values(ascending=False)
+    highest_earning_country = percentage.index[0]
+    highest_earning_country_percentage = round(percentage.iloc[0],1)
 
     # Identify the most popular occupation for those who earn >50K in India.
-    top_IN_occupation = None
+    people_in_india = df['native-country']=='India'
+    people_who_earn_high = df[people_in_india & earnings]['occupation'].value_counts()
+    top_IN_occupation=people_who_earn_high.index[0]
 
     # DO NOT MODIFY BELOW THIS LINE
 
