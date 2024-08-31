@@ -23,7 +23,7 @@ def calculate_demographic_data(print_data=True):
     lower_education_rich = round(((~education & earnings).sum()/(~education).sum())*100,1)
 
     # What is the minimum number of hours a person works per week (hours-per-week feature)?
-    min_work_hours = min_work_hours = df['hours-per-week'].min()
+    min_work_hours = df['hours-per-week'].min()
 
     # What percentage of the people who work the minimum number of hours per week have a salary of >50K?
     num_min_workers = df['hours-per-week']==min_work_hours
